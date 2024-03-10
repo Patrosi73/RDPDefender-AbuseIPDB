@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 keys.json
 processed_lines.txt
+.vscode
