@@ -27,7 +27,7 @@ def report(ip, timestamp):
     endpoint = 'https://api.abuseipdb.com/api/v2/report'
     payload = {
         'ip': ip_address,
-        'categories': [14, 18],
+        'categories': '14,18',
         'comment': 'RDP Brute-Forcing',
         'timestamp': time
     }
