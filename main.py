@@ -2,7 +2,7 @@ import json
 import time
 import os
 import requests
-
+from datetime import datetime
 with open("keys.json") as keys_data:
     keys = json.load(keys_data)
 apikey = keys['apikey']
@@ -21,6 +21,23 @@ def extract_info(line):
     timestamp = parts[1].strip()
     return ip_address, timestamp
 
+def report(ip, timestamp):
+    time = datetime.strptime(timestamp, "%m/%d/%Y %I:%M %p").strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    endpoint = 'https://api.abuseipdb.com/api/v2/report'
+    payload = {
+        'ip': ip_address,
+        'categories': [14, 18],
+        'comment': 'RDP Brute-Forcing',
+        'timestamp': time
+    }
+    headers = {
+        'Key': apikey,
+        'Accept': 'application/json'
+    }
+    response = requests.post(endpoint, data=payload, headers=headers)
+    print("API Response:", response.text)
+
 def report_missing(blocklistfile, processed_file):
     with open(blocklistfile, "r") as blacklist:
         blocklist_content = blacklist.readlines()
@@ -35,8 +52,6 @@ def report_missing(blocklistfile, processed_file):
                 processedfile.write(ip_address + ',' + timestamp + '\n')
                 time.sleep(1)
 
-report_missing(path, processed_lines_file)
-
 while True:
     with open(processed_lines_file, 'a+') as file:
         file.seek(0)
@@ -44,6 +59,7 @@ while True:
         if last_entry not in file.read():
             ip_address, timestamp = extract_info(last_entry)
             print("Reporting IP: " + ip_address + ", Date: " + timestamp)
+            report(ip_address, timestamp)
             file.write(ip_address + ',' + timestamp + '\n')
             file.seek(0)
 
