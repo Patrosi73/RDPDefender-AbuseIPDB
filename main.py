@@ -7,7 +7,6 @@ with open("keys.json") as keys_data:
     keys = json.load(keys_data)
 apikey = keys['apikey']
 path = keys['blocklist']
-target_text = 'Service - Blocking address'
 processed_lines_file = 'processed_lines.txt'
 
 
