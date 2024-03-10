@@ -2,7 +2,8 @@ import json
 import time
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
+import pytz
 with open("keys.json") as keys_data:
     keys = json.load(keys_data)
 apikey = keys['apikey']
@@ -21,14 +22,18 @@ def extract_info(line):
     return ip_address, timestamp
 
 def report(ip_address, timestamp):
-    time = datetime.strptime(timestamp, "%m/%d/%Y %I:%M %p").strftime("%Y-%m-%dT%H:%M:%SZ")
+    system_timezone = str(datetime.now(pytz.timezone('UTC')).astimezone().tzinfo)
+    
+    timestamp_utc = datetime.strptime(timestamp, "%m/%d/%Y %I:%M %p").replace(tzinfo=pytz.timezone(system_timezone)).astimezone(timezone.utc)
+    timestamp_utc_str = timestamp_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+
 
     endpoint = 'https://api.abuseipdb.com/api/v2/report'
     payload = {
         'ip': ip_address,
         'categories': '14,18',
         'comment': 'RDP Brute-Forcing',
-        'timestamp': time
+        'timestamp': timestamp_utc_str
     }
     headers = {
         'Key': apikey,

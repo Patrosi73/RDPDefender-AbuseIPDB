@@ -2,9 +2,9 @@
 A simple tool to automatically report all blocked IPs with RDP Defender to AbuseIPDB.
 
 # Installation
-- If you haven't already, download Python and install the requests package with pip:
+- If you haven't already, download Python and install the requests and pytz packages with pip:
 ```
-pip install requests
+pip install requests pytz
 ```
 - Git clone this repository/download it as a zip, then extract it
 - Create a file called `keys.json` with the following content:
