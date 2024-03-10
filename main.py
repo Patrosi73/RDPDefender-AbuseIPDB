@@ -20,7 +20,7 @@ def extract_info(line):
     timestamp = parts[1].strip()
     return ip_address, timestamp
 
-def report(ip, timestamp):
+def report(ip_address, timestamp):
     time = datetime.strptime(timestamp, "%m/%d/%Y %I:%M %p").strftime("%Y-%m-%dT%H:%M:%SZ")
 
     endpoint = 'https://api.abuseipdb.com/api/v2/report'
@@ -48,8 +48,11 @@ def report_missing(blocklistfile, processed_file):
             if line not in processedfile.read():
                 ip_address, timestamp = extract_info(line)
                 print("Reporting IP: " + ip_address)
+                report(ip_address, timestamp)
                 processedfile.write(ip_address + ',' + timestamp + '\n')
-                time.sleep(1)
+                time.sleep(5)
+
+report_missing(path, processed_lines_file)
 
 while True:
     with open(processed_lines_file, 'a+') as file:
@@ -62,4 +65,4 @@ while True:
             file.write(ip_address + ',' + timestamp + '\n')
             file.seek(0)
 
-    time.sleep(1)
+    time.sleep(5)
