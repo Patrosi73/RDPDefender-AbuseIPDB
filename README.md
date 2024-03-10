@@ -18,6 +18,4 @@ pip install requests
 
 with YOUR_KEY_HERE being your AbuseIPDB API key.
 
-- Create an empty file called `processed_lines.txt` - this will store reported IPs so when you re-run the tool it won't report them again.
-
 Run main.py and it'll start reporting them!
