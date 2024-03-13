@@ -51,15 +51,15 @@ def report_missing(blocklistfile, processed_file):
 report_missing(path, processed_lines_file)
 
 while True:
-    with open(processed_lines_file, 'a+') as file:
-        file.seek(0)
-        last_entry = get_last_entry(processed_lines_file)
+    with open(path, "r") as file, open(processed_lines_file, 'a+') as processedfile:
+        processedfile.seek(0)
+        last_entry = get_last_entry(path)
 
-        if last_entry is not None and last_entry not in file.read():
+        if last_entry is not None and last_entry not in processedfile.read():
             ip_address, timestamp = extract_info(last_entry)
             print("Reporting IP:", ip_address)
             report(ip_address, timestamp)
-            file.write(f"{ip_address},{timestamp}\n")
-            file.seek(0)
+            processedfile.write(f"{ip_address},{timestamp}\n")
+            processedfile.seek(0)
 
     time.sleep(5)
